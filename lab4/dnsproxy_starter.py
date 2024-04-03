@@ -63,6 +63,7 @@ def run_proxy(port, dns_port, spoof_response):
     
     finally:
         proxy_socket.close()
+        print("\n----DNS proxy quit----\n")
 
 if __name__ == "__main__":
     print("----DNS proxy start----\n")

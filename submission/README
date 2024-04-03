@@ -13,7 +13,12 @@ Part1:
         dig @127.0.0.1 -p <NAMED port number> <args>
         
 Part2:
-    socket programming in python, to simply receive the 
+    socket programming in python, establish the connection and when user try to use
+    dig to execute a dns query at localhost, it send to my dns proxy port, after the 
+    proxy receive the data, forward it to the real local dns server, and get response
+    from the dns server. Finally, send back what dns server send back to the proxy to 
+    the user.
+
 Part3:
 
 Part4:
