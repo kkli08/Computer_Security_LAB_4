@@ -18,3 +18,10 @@ dns_port = args.dns_port
 # Flag to indicate if the proxy should spoof responses
 SPOOF = args.spoof_response
 
+print("----DNS proxy start----\n")
+print("----INFO Section----")
+print("port number: %d" % port)
+print("dns port number: %d" % dns_port)
+print("Spoof msg: %s" % SPOOF)
+print("--------------------")
+
