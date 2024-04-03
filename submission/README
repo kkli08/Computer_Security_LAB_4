@@ -8,7 +8,10 @@ Part1:
         dig MX utoronto.ca
         and then:
         dig utoronto-ca.mail.protection.outlook.com
-    
+    4. the output matches the the result.
+        I use: 
+        dig @127.0.0.1 -p <NAMED port number> <args>
+        
 Part2:
 
 Part3:
