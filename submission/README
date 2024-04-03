@@ -13,7 +13,7 @@ Part1:
         dig @127.0.0.1 -p <NAMED port number> <args>
         
 Part2:
-
+    socket programming in python, to simply receive the 
 Part3:
 
 Part4:

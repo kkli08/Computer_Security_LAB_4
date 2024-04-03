@@ -2,6 +2,6 @@
 DNS Cache Poisoning
 
 - [x] part 1
-- [ ] part 2
+- [x] part 2
 - [ ] part 3
 - [ ] part 4

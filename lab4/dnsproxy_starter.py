@@ -45,7 +45,7 @@ def run_proxy(port, dns_port, spoof_response):
     proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         proxy_socket.bind(('0.0.0.0', port))
-        print("DNS Proxy running on port %d" % port)
+        print("DNS Proxy running on port %d\n" % port)
 
         while True:
             data, addr = proxy_socket.recvfrom(4096)
@@ -60,14 +60,15 @@ def run_proxy(port, dns_port, spoof_response):
             
             proxy_socket.sendto(response, addr)
             print("Response sent back to %s\n" % str(addr))
+    
     finally:
         proxy_socket.close()
 
 if __name__ == "__main__":
     print("----DNS proxy start----\n")
     print("----INFO Section----")
-    print("port number: %d" % port)
-    print("dns port number: %d" % dns_port)
+    print("DNS Proxy port number: %d" % port)
+    print("DNS Server port number: %d" % dns_port)
     print("Spoof msg: %s" % spoof_response)
     print("--------------------\n")
     run_proxy(port, dns_port, spoof_response)
