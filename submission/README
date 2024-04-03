@@ -20,5 +20,17 @@ Part2:
     the user.
 
 Part3:
+    when the proxy comes to spoof attck mode, I use scapy to modified the packet send back
+    from the dns server. when the qname == 'example.com.', modified the packet information
+    by reconstructing with rdata='1.2.3.4', change its name servers rdata='ns.dnslabattacker.net.'
 
 Part4:
+
+
+Reference:
+
+Python Socket Connection:
+https://realpython.com/python-sockets/
+
+How to modify packet using Scapy:
+https://www.usna.edu/Users/cs/choi/it432/lec/l06/lec.html

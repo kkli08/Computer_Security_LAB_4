@@ -3,5 +3,5 @@ DNS Cache Poisoning
 
 - [x] part 1
 - [x] part 2
-- [ ] part 3
+- [x] part 3
 - [ ] part 4
