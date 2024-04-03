@@ -2,10 +2,10 @@
 
 Part1:
     1. In order to find the IPv4 address for utoronto,ca, I use: dig utoronto.ca
-    2. In order to find the name of the name server with their IP address, I use: dig NS utoronto.ca
+    2. In order to find the name of the name server with their IP address, I use: dig utoronto.ca NS
     3. In order to find the names of the mail server with their IP address, 
         I use:
-        dig MX utoronto.ca
+        dig utoronto.ca MX
         and then:
         dig utoronto-ca.mail.protection.outlook.com
     4. the output matches the the result.
