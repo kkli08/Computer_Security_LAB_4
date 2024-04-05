@@ -8,5 +8,5 @@ DNS Cache Poisoning
 
 ## Insightful YT reference
 
-* [What is DNS]()
-* [DNS Record Explan](https://www.youtube.com/watch?v=HnUDtycXSNE)
+* [How DNS work](https://www.youtube.com/watch?v=mpQZVYPuDGU)
+* [DNS Record Explain](https://www.youtube.com/watch?v=HnUDtycXSNE)
