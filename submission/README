@@ -37,7 +37,13 @@ Part3:
 Part4:
     dig command that I used:
     ./part4_starter.py --ip 128.100.8.62 --port <local dns server port> --dns_port <> --query_port 33333
-    check using dig:
+    
+    follow the instructions on lab4 handout,
+    firstly set up the socket connection and init the dns packet for 'example.com', it will be used after we flood the server
+    and then query the bind server for a non-existing name, since the mapping is not available in the BIND server cache, it wills
+    send out a DNS query to the name server of the example.com domain.
+    when the BIND server waits for the reply from the name server, flood it with different transaction ID, genertated randomly
+    the script will repeatly run until it successfully posioned the BIND DNS cache.
 
 
     
@@ -50,3 +56,9 @@ https://realpython.com/python-sockets/
 
 How to modify packet using Scapy:
 https://www.usna.edu/Users/cs/choi/it432/lec/l06/lec.html
+
+How DNS work:
+https://www.youtube.com/watch?v=mpQZVYPuDGU
+
+DNS Record Explain:
+https://www.youtube.com/watch?v=HnUDtycXSNE
