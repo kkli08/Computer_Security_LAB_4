@@ -11,7 +11,7 @@ from subprocess import call
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip", help="ip address for your bind - do not use localhost", type=str, required=True)
 parser.add_argument("--port", help="port for your bind - listen-on port parameter in named.conf", type=int, required=True)
-parser.add_argument("--dns_port", help="port the BIND uses to listen to dns queries", type=int, required=True)
+parser.add_argument("--dns_port", help="port the BIND uses to listen to dns queries", type=int, required=False)
 parser.add_argument("--query_port", help="port from where your bind sends DNS queries - query-source port parameter in named.conf", type=int, required=True)
 args = parser.parse_args()
 
@@ -82,11 +82,12 @@ def SendDNSQuery():
         print response.show()
         print "***** End of Remote DNS BIND Packet *****\n"
 
-        if response and response[DNS].ns[DNSRR].rdata == 'ns.dbslabattacker.net.':
-            print('Success!\n')
-            break
-        else:
-            print('NS name:\n%s\n' % response[DNS].ns[DNSRR].rdata)
+        if response[DNS].ns:
+            if response[DNS].ns[DNSRR].rdata == 'ns.dbslabattacker.net.':
+                print('Success!\n')
+                break
+            else:
+                print('NS name:\n%s\n' % response[DNS].ns[DNSRR].rdata)
         
         print("---Next Round Attempt...---\n")
     
@@ -96,7 +97,8 @@ if __name__ == '__main__':
     print("----INFO Section----")
     print("Bind ip: %s" % my_ip)
     print("DNS Proxy port number: %d" % my_port)
-    print("DNS Server port number: %d" % dns_port)
+    if(dns_port):
+        print("DNS Server port number: %d" % dns_port)
     print("DNS Query port number: %d" % my_query_port)
     print("--------------------\n")
     SendDNSQuery()
