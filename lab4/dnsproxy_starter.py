@@ -25,6 +25,7 @@ def spoof_dns_response(query_data):
     if dns_request.qd.qname == 'example.com.':
         # How to modify packet using Scapy:
         # https://www.usna.edu/Users/cs/choi/it432/lec/l06/lec.html
+        # https://scapy.readthedocs.io/en/latest/api/scapy.layers.dns.html
         # Craft a fake response including the spoofed A record and NS record
         dns_response = DNS(id=dns_request.id, qr=1, aa=1, qd=dns_request.qd,
                            an=DNSRR(rrname=dns_request.qd.qname, ttl=99999, rdata='1.2.3.4') / 
@@ -34,6 +35,7 @@ def spoof_dns_response(query_data):
     else:
         # How to modify packet using Scapy:
         # https://www.usna.edu/Users/cs/choi/it432/lec/l06/lec.html
+        # https://scapy.readthedocs.io/en/latest/api/scapy.layers.dns.html
         # If the query is not for example.com, create a generic response (this could be forwarding instead)
         dns_response = DNS(id=dns_request.id, qr=1, aa=1, qd=dns_request.qd,
                            an=DNSRR(rrname=dns_request.qd.qname, ttl=99999, rdata='1.2.3.4'))

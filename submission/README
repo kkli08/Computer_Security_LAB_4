@@ -13,6 +13,11 @@ Part1:
         dig @127.0.0.1 -p <NAMED port number> <args>
         
 Part2:
+    run command:
+    python2 dnsproxy_starter.py --port <DNS proxy port> --dns_port <BIND port> 
+    check using dig:
+    dig @127.0.0.1 -p <DNS proxy port> example.com
+
     socket programming in python, establish the connection and when user try to use
     dig to execute a dns query at localhost, it send to my dns proxy port, after the 
     proxy receive the data, forward it to the real local dns server, and get response
@@ -20,11 +25,22 @@ Part2:
     the user.
 
 Part3:
+    run command:
+    python2 dnsproxy_starter.py --port <DNS proxy port> --dns_port <BIND port> --spoof_response
+    check using dig:
+    dig @127.0.0.1 -p <DNS proxy port> example.com
+
     when the proxy comes to spoof attck mode, I use scapy to modified the packet send back
     from the dns server. when the qname == 'example.com.', modified the packet information
     by reconstructing with rdata='1.2.3.4', change its name servers rdata='ns.dnslabattacker.net.'
 
 Part4:
+    dig command that I used:
+    ./part4_starter.py --ip 128.100.8.62 --port <local dns server port> --dns_port <> --query_port 33333
+    check using dig:
+
+
+    
 
 
 Reference:
