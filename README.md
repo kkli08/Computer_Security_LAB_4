@@ -4,7 +4,7 @@ DNS Cache Poisoning
 - [x] part 1
 - [x] part 2
 - [x] part 3
-- [ ] part 4
+- [x] part 4
 
 ## Insightful YT reference
 
